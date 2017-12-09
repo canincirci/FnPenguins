@@ -20,10 +20,16 @@
    For example:
    printf("%d", whatever.rows);
    
-   To pass a struct into a function, just pass a pointer to it:
+   To create a function that takes a struct as an argument, just take
+   a pointer to it:
    void some_function(struct Gmdt *whatever){
        //function code goes here
-   }
+   }.
+   
+   Similarly, to pass a struct into such function so that it can alter
+   the struct directly, use the "&" operator, just like in scanf:
+   some_function(&whatever);
+   
    However, when having just a pointer to the struct, one needs to
    get the values using the -> operator instead. For example:
    whatever->rows
@@ -39,8 +45,9 @@ struct Gmdt {
        the row here.
        
        The memory for this array should be allocated dynamically
-       with the malloc() function, and with respect to the other
-       variables in this struct, namely "rows" and "columns".    */
+       with the allocate_memory() function, but this function can
+       only be used if the "rows" and "columns" values are already
+       specified!                                                    */
     
     int rows;
     int columns;
@@ -70,5 +77,22 @@ struct Gmdt {
        the other variables from this struct, namely:
        pngns_pos[max_players][max_pngns][2].                              */
 };
+
+/* Call this function to dynamically allocate memory for the map array, 
+   but NOT BEFORE the gmdt struct has the rows and columns values set!    */
+void allocate_memory(struct Gmdt *gmdt);
+
+/* Call this function to dynamically allocate memory for the pngns_pos
+   array, but NOT BEFORE the gmdt struct has the max_players and max_pngns
+   values set!                                                            */
+void allocate_pngns(struct Gmdt *gmdt);
+
+/* Call this function at the very end, after you're 100% certain the
+   map array from the gmdt struct will no longer be needed                */
+void free_memory(struct Gmdt *gmdt);
+
+/* Call this function at the very end, after you're 100% certain the
+   pngns_pos array from the gmdt struct will no longer be needed          */
+void free_pngns(struct Gmdt *gmdt);
 
 #endif // DATASTRC_H_INCLUDED
